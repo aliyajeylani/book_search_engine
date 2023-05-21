@@ -7,8 +7,7 @@
   Image of webpage:
 
 
-![website](./Assets/website.png.png)
-
+![website](./Assets/website.png)
 
 
   ### Installation
