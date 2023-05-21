@@ -9,6 +9,8 @@ import {
   Col
 } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
+import { REMOVE_BOOK } from '../utils/mutations';
+
 
 import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
@@ -59,13 +61,23 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await deleteBook(bookId, token);
+      // const response = await deleteBook(bookId, token);
+      const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+      update(cache, { data: { removeBook } }) {
+        try {
+          cache.writeQuery({
+            query: QUERY_ME,
+            data: { me: removeBook },
+          });
+        } catch (e) {
+          console.error(e);
+        }
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      // if (!response.ok) {
+      //   throw new Error('something went wrong!');
+      // }
 
-      const updatedUser = await response.json();
+      // const updatedUser = await response.json();
       // setUserData(updatedUser);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
