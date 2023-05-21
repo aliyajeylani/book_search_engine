@@ -4,9 +4,6 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-        users: async () => {
-            return User.find().populate('savedBooks')
-        },
         me: async (parent, context) => {
             if (context.user) {
                 return User.findOne({ _id: context.user_id }).populate('savedBooks');
@@ -18,7 +15,9 @@ const resolvers = {
 
     Mutation: {
         addUser: async (parent, { username, email, password }) => {
+            console.log(username, email);
             const user = await User.create({ username, email, password });
+            console.log(user);
             const token = signToken(user);
             return { token, user };
         },
@@ -40,30 +39,23 @@ const resolvers = {
             return { token, user };
         },
 
-        savedBook: async (parent, { authors }, context) => {
+        saveBook: async (parent, { savedBook }, context) => {
             if (context.user) {
-                const book = await Book.create({
-                    authors,
-                    description,
-                    title,
-                    image,
-                    link
-                });
-
-                await User.findOneAndUpdate(
+                return User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $addToSet: { books: book._id } }
+                    { $addToSet: { savedBooks: savedBook } },
+                    { new: true }
                 );
 
-                return book;
             }
             throw new AuthenticationError('You need to be logged in!');
         },
 
         removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
-                return Book.findOneAndUpdate(
-                    { _id: bookId },
+                return User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { savedBooks: savedBook } },
                     { new: true }
                 );
             }
@@ -73,4 +65,4 @@ const resolvers = {
 
 };
 
-module.export = resolvers;
+module.exports = resolvers;
