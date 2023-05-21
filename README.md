@@ -6,7 +6,6 @@
 
   Image of webpage:
 
-  ![notetaker](./images/2023-03-05_16-13-03.png)
 
 ![website](./Assets/website.png.png)
 

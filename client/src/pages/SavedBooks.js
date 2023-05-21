@@ -24,7 +24,7 @@ const SavedBooks = () => {
 
     const { loading, data } = useQuery(GET_ME);
 
-    const userData = data?.me || { };
+    const userData = data?.me || [];
 
     console.log(data);
 
@@ -60,7 +60,7 @@ const SavedBooks = () => {
       return false;
     }
 
-    try {
+   
       // const response = await deleteBook(bookId, token);
       const [removeBook, { error }] = useMutation(REMOVE_BOOK);
       update(cache, { data: { removeBook } }) {
@@ -86,6 +86,7 @@ const SavedBooks = () => {
     // }
   };
 
+  
   // if data isn't here yet, say so
   if (loading) {
     return <h2>LOADING...</h2>;
@@ -126,6 +127,6 @@ const SavedBooks = () => {
       </Container>
     </>
   );
-};
+
 
 export default SavedBooks;
