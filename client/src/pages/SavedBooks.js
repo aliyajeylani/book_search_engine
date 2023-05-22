@@ -23,8 +23,9 @@ const SavedBooks = () => {
   // const userDataLength = Object.keys(userData).length;
 
     const { loading, data } = useQuery(GET_ME);
+    const [removeBook, { error }] = useMutation(REMOVE_BOOK);
 
-    const userData = data?.me || [];
+    const userData = data?.me || {};
 
     console.log(data);
 
@@ -62,13 +63,14 @@ const SavedBooks = () => {
 
    
       // const response = await deleteBook(bookId, token);
-      const [removeBook, { error }] = useMutation(REMOVE_BOOK);
-      update(cache, { data: { removeBook } }) {
+      
+      // update(cache, { data: { removeBook } }) {
         try {
-          cache.writeQuery({
-            query: QUERY_ME,
-            data: { me: removeBook },
-          });
+          const { data } = await removeBook({
+            variables: { bookId }
+          })
+
+          removeBookId(bookId);
         } catch (e) {
           console.error(e);
         }
@@ -127,6 +129,6 @@ const SavedBooks = () => {
       </Container>
     </>
   );
-
+        }
 
 export default SavedBooks;
